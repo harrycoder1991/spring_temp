@@ -35,8 +35,7 @@ public class BillingAccountController {
 
 	@PostMapping(value = "/createBillingAccount", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> createBillingAccount(@RequestBody AccountBillDTO accountBill) {
-		// Process the incoming AccountBill XML and create the billing account
-		// Call the necessary services and handle the business logic here
+		
 
 		// Dummy response for demonstration
 		String jsonResponse = "{\"message\": \"Billing account created successfully\"}";
