@@ -37,6 +37,8 @@ public class AccountBillDTO {
   @JacksonXmlProperty(localName = "ReturnStatus")
   private String returnStatus;
 
-
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "AssociatedPolicies")
+  private AssociatedPolicies associatedPolicies;
 
 }
