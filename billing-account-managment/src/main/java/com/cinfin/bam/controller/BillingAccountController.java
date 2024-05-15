@@ -26,18 +26,11 @@ public class BillingAccountController {
 	public String hello() {
 		return "Hello from Billing Account API!";
 	}
-	/*
-	 * @PostMapping("/check-and-create") public ResponseEntity<String>
-	 * checkAndCreateAccount(@RequestBody AccountInfoDTO accountInfoDTO) { String
-	 * response = billingAccountService.checkAndCreateAccount(accountInfoDTO);
-	 * return ResponseEntity.ok(response); }
-	 */
+	
 
 	@PostMapping(value = "/createBillingAccount", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> createBillingAccount(@RequestBody AccountBillDTO accountBill) {
-		
 
-		// Dummy response for demonstration
 		String jsonResponse = "{\"message\": \"Billing account created successfully\"}";
 
 		return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
