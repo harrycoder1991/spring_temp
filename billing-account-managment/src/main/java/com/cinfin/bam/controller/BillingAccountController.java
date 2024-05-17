@@ -25,12 +25,11 @@ public class BillingAccountController {
 
   @PostMapping(value = "/createBillingAccount", consumes = MediaType.APPLICATION_XML_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> createBillingAccount(
-      @Valid @RequestBody AccountBillDTO accountBill) {
-
+  public ResponseEntity<Object> createBillingAccount(@Valid @RequestBody AccountBillDTO request) {
+    this.billingAccountService.createBillingAccount(request);
     String jsonResponse =
         "{\"message\": \"Billing account created successfully\", \"requestData\": "
-            + accountBill.toString() + "}";
+            + request.toString() + "}";
 
     return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
   }

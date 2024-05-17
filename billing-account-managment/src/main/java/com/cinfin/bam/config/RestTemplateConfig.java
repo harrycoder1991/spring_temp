@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -17,7 +16,7 @@ public class RestTemplateConfig {
 
   @Bean
   public RestTemplate restTemplate() {
-    RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+    RestTemplate restTemplate = new RestTemplate();
     restTemplate.setMessageConverters(Arrays.asList(new ByteArrayHttpMessageConverter(),
         new StringHttpMessageConverter(StandardCharsets.UTF_8), new FormHttpMessageConverter(),
         new MappingJackson2HttpMessageConverter(), new MappingJackson2XmlHttpMessageConverter()));
