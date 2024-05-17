@@ -1,17 +1,16 @@
 package com.cinfin.bam.service;
 
-import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 import com.cinfin.bam.dto.requests.AccountBillDTO;
 import com.cinfin.bam.dto.responses.Account;
 import com.cinfin.bam.dto.responses.PayorSearchResponse;
@@ -67,16 +66,23 @@ public class AssureService {
       String queryParam = request.getPayorInfo().getPayorType().equals("CO")
           ? request.getPayorInfo().getCompanyName()
           : request.getPayorInfo().getLastName();
-      URI uri = UriComponentsBuilder.fromHttpUrl(this.assureServiceUrl).path("/parties/v1/parties")
-          .queryParam("query", queryParam).queryParam("filters", "addressType:Billing").build()
-          .toUri();
 
-      // Make the GET request to search for payors
-      PayorSearchResponse payorSearchResponse =
-          this.restTemplate.getForObject(uri, PayorSearchResponse.class);
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.add("X-CSC-User-Id", "Jharve4");
+      headers.add("X-Service-request", "False");
+
+      HttpEntity<String> entity = new HttpEntity<>(headers);
+
+      String url = this.assureServiceUrl + "/parties/v1/parties" + "?query=" + queryParam
+          + "&filters=addressType:Billing";
+
+      ResponseEntity<PayorSearchResponse> payorSearchResponse =
+          this.restTemplate.exchange(url, HttpMethod.GET, entity, PayorSearchResponse.class);
 
       // Iterate through the list of payors to find the exact match
-      for (PartySearchItem payor : payorSearchResponse.getEmbedded().getPartySearchList()) {
+      for (PartySearchItem payor : payorSearchResponse.getBody().getEmbedded()
+          .getPartySearchList()) {
         if (request.getPayorInfo().getPayorType().equals("CO")
             && payor.getName().equals(request.getPayorInfo().getCompanyName())) {
           return payor;
