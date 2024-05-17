@@ -1,7 +1,5 @@
 package com.cinfin.bam.dto.responses;
 
-import java.util.List;
-import com.cinfin.bam.dto.responses.PayorSearchResponse.Link;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
@@ -28,7 +26,7 @@ public class Account {
   private String frequency;
   private String businessGroup;
   private boolean isAutoPayEnable;
-  private List<Link> links;
+  // private List<Link> links;
 
   // Getters and setters
 
