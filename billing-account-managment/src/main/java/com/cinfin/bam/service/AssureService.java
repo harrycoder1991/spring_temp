@@ -1,7 +1,6 @@
 package com.cinfin.bam.service;
 
 import java.net.URI;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.cinfin.bam.dto.requests.AccountBillDTO;
 import com.cinfin.bam.dto.responses.Account;
-import com.cinfin.bam.dto.responses.AccountResponse;
 import com.cinfin.bam.dto.responses.PayorSearchResponse;
 import com.cinfin.bam.dto.responses.PayorSearchResponse.PartySearchItem;
 
@@ -48,23 +46,20 @@ public class AssureService {
       HttpEntity<String> entity = new HttpEntity<>(headers);
       String url = this.assureServiceUrl + "/billing-accounts/v1/billing/accounts" + "?query="
           + "&filters=accountNumber:" + accountNumber;
-      ResponseEntity<AccountResponse> response =
-          this.restTemplate.exchange(url, HttpMethod.GET, entity, AccountResponse.class);
+      ResponseEntity<Account> response =
+          this.restTemplate.exchange(url, HttpMethod.GET, entity, Account.class);
 
-      if (response != null && response.getEmbedded() != null
-          && response.getEmbedded().getAccountSearchList() != null) {
-        List<Account> accountSearchList = response.getEmbedded().getAccountSearchList();
-        if (!accountSearchList.isEmpty()) {
-          return accountSearchList.get(0).getAccountId();
-        }
+      if (response != null) {
+        return response.getBody().getAccountId();
       }
       return null;
-    } catch (HttpClientErrorException | HttpServerErrorException e) {
+
+
+    } catch (Exception e) {
       throw new Exception("Error checking account existence", e);
     }
+
   }
-
-
 
   public PartySearchItem getPayor(AccountBillDTO request) throws Exception {
     try {
@@ -72,7 +67,7 @@ public class AssureService {
       String queryParam = request.getPayorInfo().getPayorType().equals("CO")
           ? request.getPayorInfo().getCompanyName()
           : request.getPayorInfo().getLastName();
-      URI uri = UriComponentsBuilder.fromHttpUrl(this.apiBaseUrl).path("/parties/v1/parties")
+      URI uri = UriComponentsBuilder.fromHttpUrl(this.assureServiceUrl).path("/parties/v1/parties")
           .queryParam("query", queryParam).queryParam("filters", "addressType:Billing").build()
           .toUri();
 
