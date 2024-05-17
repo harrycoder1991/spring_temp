@@ -3,7 +3,7 @@ package com.cinfin.bam.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cinfin.bam.dto.requests.AccountBillDTO;
-import com.cinfin.bam.dto.responses.PayorSearchResponse.PartySearchItem;
+import com.cinfin.bam.dto.responses.PartySearchItem;
 
 @Service
 public class BillingAccountService {

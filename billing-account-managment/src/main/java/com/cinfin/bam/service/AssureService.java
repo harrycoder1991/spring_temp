@@ -13,8 +13,8 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import com.cinfin.bam.dto.requests.AccountBillDTO;
 import com.cinfin.bam.dto.responses.Account;
+import com.cinfin.bam.dto.responses.PartySearchItem;
 import com.cinfin.bam.dto.responses.PayorSearchResponse;
-import com.cinfin.bam.dto.responses.PayorSearchResponse.PartySearchItem;
 
 @Service
 public class AssureService {
