@@ -4,6 +4,10 @@ import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -18,23 +22,35 @@ import com.cinfin.bam.dto.responses.PayorSearchResponse.PartySearchItem;
 @Service
 public class AssureService {
 
+  @Value("${assure.service.url}")
+  private String assureServiceUrl;
+
+  @Value("${assure.service.user.id}")
+  private String userId;
+
+  @Value("${assure.service.request}")
+  private String serviceRequest;
+
+
   private final RestTemplate restTemplate;
-  private final String apiBaseUrl;
+
 
   @Autowired
-  public AssureService(RestTemplate restTemplate,
-      @Value("${assure.api.base.url}") String apiBaseUrl) {
+  public AssureService(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
-    this.apiBaseUrl = apiBaseUrl;
   }
 
   public String checkAccountExists(String accountNumber) throws Exception {
     try {
-      URI uri = UriComponentsBuilder.fromHttpUrl(this.apiBaseUrl)
-          .path("/billing-accounts/v1/billing/accounts")
-          .queryParam("filters", "accountNumber:" + accountNumber).build().toUri();
+      HttpHeaders headers = new HttpHeaders();
+      headers.set("X-CSC-User-Id", this.userId);
+      headers.set("X-Service-request", this.serviceRequest);
+      HttpEntity<String> entity = new HttpEntity<>(headers);
+      String url = this.assureServiceUrl + "/billing-accounts/v1/billing/accounts" + "?query="
+          + "&filters=accountNumber:" + accountNumber;
+      ResponseEntity<AccountResponse> response =
+          this.restTemplate.exchange(url, HttpMethod.GET, entity, AccountResponse.class);
 
-      AccountResponse response = this.restTemplate.getForObject(uri, AccountResponse.class);
       if (response != null && response.getEmbedded() != null
           && response.getEmbedded().getAccountSearchList() != null) {
         List<Account> accountSearchList = response.getEmbedded().getAccountSearchList();
