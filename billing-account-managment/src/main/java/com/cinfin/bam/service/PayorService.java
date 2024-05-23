@@ -22,10 +22,7 @@ public class PayorService {
   @Autowired
   private RestTemplate restTemplate;
 
-  public PayorService(String assureCreatePayorServiceUrl, RestTemplate restTemplate) {
-    this.assureCreatePayorServiceUrl = assureCreatePayorServiceUrl;
-    this.restTemplate = restTemplate;
-  }
+
 
   public void createAdditionalName(String partyId, AdditionalNameRequest additionalNameRequest) {
     String url = this.assureCreatePayorServiceUrl + "/" + partyId + "/additionalNames";

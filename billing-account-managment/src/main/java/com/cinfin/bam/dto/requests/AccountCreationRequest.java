@@ -1,15 +1,19 @@
 package com.cinfin.bam.dto.requests;
 
+import java.util.Date;
+import lombok.Data;
+
+@Data
 public class AccountCreationRequest {
   private String accountNumber;
   private String type;
   private String billingType;
   private String accountPlan;
-  private String accountDueDate;
-  private String billThroughDate;
+  private Date accountDueDate;
+  private Date billThroughDate;
   private String presentmentMethod;
   private String payorId;
-  private int payorAddressId;
+  private String payorAddressId;
 
   /*
    * public AccountCreationRequest(AccountPayorInfo payorInfo, PayorInfo payor) { this.accountNumber

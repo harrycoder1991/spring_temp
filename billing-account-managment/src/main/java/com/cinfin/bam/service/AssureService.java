@@ -12,12 +12,16 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import com.cinfin.bam.dto.requests.AccountBillDTO;
+import com.cinfin.bam.dto.requests.AccountCreationRequest;
 import com.cinfin.bam.dto.responses.Account;
 import com.cinfin.bam.dto.responses.PartySearchItem;
 import com.cinfin.bam.dto.responses.PayorSearchResponse;
 
 @Service
 public class AssureService {
+
+  private static final String BASE_URL =
+      "http://10.224.192.45:8080/billing-accounts/v1/billing/accounts";
 
   @Value("${assure.service.url}")
   private String assureServiceUrl;
@@ -27,7 +31,6 @@ public class AssureService {
 
   @Value("${assure.service.request}")
   private String serviceRequest;
-
 
   private final RestTemplate restTemplate;
 
@@ -58,6 +61,25 @@ public class AssureService {
       throw new Exception("Error checking account existence", e);
     }
 
+  }
+
+  public String createAccount(AccountCreationRequest request) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<AccountCreationRequest> httpEntity = new HttpEntity<>(request, headers);
+
+    ResponseEntity<String> response =
+        this.restTemplate.postForEntity(BASE_URL, httpEntity, String.class);
+
+    if (response.getStatusCode().is2xxSuccessful()) {
+      String responseBody = response.getBody();
+      // Assuming responseBody contains JSON with an "accountId" field
+      // Implement JSON parsing to extract accountId
+      return responseBody.substring(responseBody.indexOf("accountId") + 11,
+          responseBody.indexOf(",", responseBody.indexOf("accountId")) - 1);
+    } else {
+      throw new RuntimeException("Failed to create account");
+    }
   }
 
   public PartySearchItem getPayor(AccountBillDTO request) throws Exception {

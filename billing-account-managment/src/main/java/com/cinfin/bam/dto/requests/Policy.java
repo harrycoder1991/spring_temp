@@ -1,5 +1,6 @@
 package com.cinfin.bam.dto.requests;
 
+import java.util.Date;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,10 +26,10 @@ public class Policy {
   private String agencyId;
 
   @JacksonXmlProperty(localName = "EffectiveDt")
-  private String effectiveDt;
+  private Date effectiveDt;
 
   @JacksonXmlProperty(localName = "ExpirationDt")
-  private String expirationDt;
+  private Date expirationDt;
 
   @JacksonXmlProperty(localName = "UserId")
   private String userId;
