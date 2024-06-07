@@ -37,6 +37,7 @@ public class BillingAccountService {
   public void createBillingAccount(AccountBillDTO request) {
     try {
       // Call Assure to see if the account exists
+      System.out.println("Request is " + request.toString());
       String accountId =
           this.assureService.checkAccountExists(request.getAccountInfo().getCurrentAccountNbr());
 
@@ -77,8 +78,8 @@ public class BillingAccountService {
         accountCreateRequest.setType("DirectBill");
         accountCreateRequest.setBillingType(plan.getBilTypeCd());
         accountCreateRequest.setAccountPlan(plan.getBilClassCd());
-        accountCreateRequest.setAccountDueDate(request.getPolicy().getEffectiveDt());
-        accountCreateRequest.setBillThroughDate(request.getPolicy().getEffectiveDt());
+        // accountCreateRequest.setAccountDueDate(request.getPolicy().getEffectiveDt());
+        // accountCreateRequest.setBillThroughDate(request.getPolicy().getEffectiveDt());
         accountCreateRequest.setPresentmentMethod("Paper");
         accountCreateRequest.setPayorId(partyId);
         // accountCreateRequest.setPayorAddressId(addressRequest.getSequence());

@@ -1,7 +1,7 @@
 package com.cinfin.bam.repository;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,5 +23,5 @@ public interface DirectBillPlanRepository extends JpaRepository<DirectBillPlan, 
   DirectBillPlan findDirectBillPlan(@Param("hqState") String hqState,
       @Param("policyPkgType") String policyPkgType, @Param("policyPrefix") String policyPrefix,
       @Param("pmtPlan") String pmtPlan, @Param("collectMeth") String collectMeth,
-      @Param("planEffDt") Date planEffDt, @Param("planExpDt") Date planExpDt);
+      @Param("planEffDt") LocalDate localDate, @Param("planExpDt") LocalDate localDate2);
 }

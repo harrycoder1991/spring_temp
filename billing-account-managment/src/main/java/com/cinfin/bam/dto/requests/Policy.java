@@ -1,6 +1,7 @@
 package com.cinfin.bam.dto.requests;
 
-import java.util.Date;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,10 +27,12 @@ public class Policy {
   private String agencyId;
 
   @JacksonXmlProperty(localName = "EffectiveDt")
-  private Date effectiveDt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private LocalDate effectiveDt;
 
   @JacksonXmlProperty(localName = "ExpirationDt")
-  private Date expirationDt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private LocalDate expirationDt;
 
   @JacksonXmlProperty(localName = "UserId")
   private String userId;
