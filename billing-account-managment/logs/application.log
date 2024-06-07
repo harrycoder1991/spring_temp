@@ -1,0 +1,22 @@
+2024-06-08 01:45:39 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-08 01:45:39 [main] INFO  c.c.b.BillingAccountInterfaceApplication - Starting BillingAccountInterfaceApplication using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 27376 (C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment\target\classes started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-08 01:45:39 [main] DEBUG c.c.b.BillingAccountInterfaceApplication - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-08 01:45:39 [main] INFO  c.c.b.BillingAccountInterfaceApplication - No active profile set, falling back to 1 default profile: "default"
+2024-06-08 01:45:41 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-06-08 01:45:41 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-06-08 01:45:41 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.63]
+2024-06-08 01:45:41 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-06-08 01:45:41 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-08 01:45:41 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-06-08 01:45:41 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-06-08 01:45:41 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-06-08 01:45:42 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-06-08 01:45:42 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.SQLServerDialect
+2024-06-08 01:45:42 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-06-08 01:45:43 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-06-08 01:45:43 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-06-08 01:45:43 [main] INFO  c.c.b.BillingAccountInterfaceApplication - Started BillingAccountInterfaceApplication in 4.614 seconds (JVM running for 5.514)
+2024-06-08 01:46:14 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-08 01:46:14 [http-nio-8080-exec-2] INFO  c.c.b.c.BillingAccountController - Performing task...
+2024-06-08 01:46:14 [http-nio-8080-exec-2] WARN  c.c.b.c.BillingAccountController - This is a warning message.
+2024-06-08 01:46:14 [http-nio-8080-exec-2] ERROR c.c.b.c.BillingAccountController - This is an error message.
