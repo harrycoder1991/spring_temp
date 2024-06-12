@@ -24,6 +24,8 @@ public class BillingAccountController {
 
   private final BillingAccountService billingAccountService;
 
+  AccountBillDTO request = new AccountBillDTO();
+  // Populate request object fields
 
   private final ApplicationPropertiesConfig config;
 
