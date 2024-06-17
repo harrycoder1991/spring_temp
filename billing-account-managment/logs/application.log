@@ -1,22 +1,76 @@
-2024-06-08 01:45:39 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
-2024-06-08 01:45:39 [main] INFO  c.c.b.BillingAccountInterfaceApplication - Starting BillingAccountInterfaceApplication using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 27376 (C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment\target\classes started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
-2024-06-08 01:45:39 [main] DEBUG c.c.b.BillingAccountInterfaceApplication - Running with Spring Boot v2.7.0, Spring v5.3.20
-2024-06-08 01:45:39 [main] INFO  c.c.b.BillingAccountInterfaceApplication - No active profile set, falling back to 1 default profile: "default"
-2024-06-08 01:45:41 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2024-06-08 01:45:41 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2024-06-08 01:45:41 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.63]
-2024-06-08 01:45:41 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2024-06-08 01:45:41 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-06-08 01:45:41 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.9.Final
-2024-06-08 01:45:41 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2024-06-08 01:45:41 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2024-06-08 01:45:42 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2024-06-08 01:45:42 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.SQLServerDialect
-2024-06-08 01:45:42 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2024-06-08 01:45:43 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-06-08 01:45:43 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2024-06-08 01:45:43 [main] INFO  c.c.b.BillingAccountInterfaceApplication - Started BillingAccountInterfaceApplication in 4.614 seconds (JVM running for 5.514)
-2024-06-08 01:46:14 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2024-06-08 01:46:14 [http-nio-8080-exec-2] INFO  c.c.b.c.BillingAccountController - Performing task...
-2024-06-08 01:46:14 [http-nio-8080-exec-2] WARN  c.c.b.c.BillingAccountController - This is a warning message.
-2024-06-08 01:46:14 [http-nio-8080-exec-2] ERROR c.c.b.c.BillingAccountController - This is an error message.
+2024-06-13 01:35:51 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 24224 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 01:35:51 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 01:35:51 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 01:35:51 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 01:35:54 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 3.492 seconds (JVM running for 6.379)
+2024-06-13 01:38:12 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 9528 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 01:38:12 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 01:38:12 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 01:38:12 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 01:38:14 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 3.769 seconds (JVM running for 6.253)
+2024-06-13 01:39:11 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 01:39:11 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 8392 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 01:39:11 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 01:39:11 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 01:39:14 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 4.384 seconds (JVM running for 7.94)
+2024-06-13 01:46:41 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 01:46:41 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 16240 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 01:46:41 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 01:46:41 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 01:46:44 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 4.25 seconds (JVM running for 7.63)
+2024-06-13 01:51:15 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 01:51:15 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 5916 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 01:51:15 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 01:51:15 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 01:51:17 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 3.741 seconds (JVM running for 7.335)
+2024-06-13 01:53:48 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 21636 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 01:53:48 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 01:53:48 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 01:53:48 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 01:53:50 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 3.595 seconds (JVM running for 6.238)
+2024-06-13 01:53:50 [main] INFO  c.c.b.c.BillingAccountController - Performing task...
+2024-06-13 01:53:50 [main] WARN  c.c.b.c.BillingAccountController - This is a warning message.
+2024-06-13 01:53:50 [main] ERROR c.c.b.c.BillingAccountController - This is an error message.
+2024-06-13 01:55:42 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 11944 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 01:55:42 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 01:55:42 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 01:55:42 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 01:55:46 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 5.406 seconds (JVM running for 9.039)
+2024-06-13 02:01:27 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 22428 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 02:01:27 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 02:01:27 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 02:01:27 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 02:01:32 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 5.59 seconds (JVM running for 9.176)
+2024-06-13 02:03:23 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 25304 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 02:03:23 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 02:03:23 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 02:03:23 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 02:03:27 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 5.811 seconds (JVM running for 9.57)
+2024-06-13 02:03:28 [main] INFO  c.c.b.c.BillingAccountController - Performing task...
+2024-06-13 02:03:28 [main] WARN  c.c.b.c.BillingAccountController - This is a warning message.
+2024-06-13 02:03:28 [main] ERROR c.c.b.c.BillingAccountController - This is an error message.
+2024-06-13 02:06:04 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 02:06:04 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 3768 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 02:06:04 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 02:06:04 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 02:06:08 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 5.263 seconds (JVM running for 8.913)
+2024-06-13 02:19:33 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 7364 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 02:19:33 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 02:19:33 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 02:19:33 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 02:19:37 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 5.14 seconds (JVM running for 8.709)
+2024-06-13 02:20:24 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 02:20:24 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 4776 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 02:20:24 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 02:20:24 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 02:20:28 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 5.864 seconds (JVM running for 10.149)
+2024-06-13 02:20:55 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 02:20:55 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 16392 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 02:20:55 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 02:20:55 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 02:20:59 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 5.803 seconds (JVM running for 10.019)
+2024-06-13 02:25:52 [main] INFO  c.c.b.c.BillingAccountControllerTest - Starting BillingAccountControllerTest using Java 11.0.22 on LAPTOP-O1V2LC1F with PID 20236 (started by Vishal in C:\Users\Vishal\Desktop\cinfin\cinfin\billing-account-managment)
+2024-06-13 02:25:52 [main] DEBUG c.c.b.c.BillingAccountControllerTest - Running with Spring Boot v2.7.0, Spring v5.3.20
+2024-06-13 02:25:52 [main] INFO  c.c.b.c.BillingAccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+2024-06-13 02:25:52 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.3.Final
+2024-06-13 02:25:55 [main] INFO  c.c.b.c.BillingAccountControllerTest - Started BillingAccountControllerTest in 4.842 seconds (JVM running for 8.198)
