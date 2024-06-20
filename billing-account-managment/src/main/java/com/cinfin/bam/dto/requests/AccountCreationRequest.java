@@ -1,6 +1,6 @@
 package com.cinfin.bam.dto.requests;
 
-import java.util.Date;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -9,19 +9,10 @@ public class AccountCreationRequest {
   private String type;
   private String billingType;
   private String accountPlan;
-  private Date accountDueDate;
-  private Date billThroughDate;
+  private LocalDate accountDueDate;
+  private LocalDate billThroughDate;
   private String presentmentMethod;
   private String payorId;
   private String payorAddressId;
 
-  /*
-   * public AccountCreationRequest(AccountPayorInfo payorInfo, PayorInfo payor) { this.accountNumber
-   * = payorInfo.getCurrentAccountNbr(); this.type = "DirectBill"; this.billingType =
-   * "Account Billing"; this.accountPlan = "CI4"; this.accountDueDate = "2024-05-01";
-   * this.billThroughDate = "2024-05-01"; this.presentmentMethod = "Paper"; this.payorId =
-   * payor.getPayorId(); this.payorAddressId = payor.getPayorAddressId(); }
-   */
-
-  // getters and setters
 }

@@ -16,119 +16,85 @@ import com.cinfin.bam.dto.requests.AccountCreationRequest;
 import com.cinfin.bam.dto.responses.Account;
 import com.cinfin.bam.dto.responses.PartySearchItem;
 import com.cinfin.bam.dto.responses.PayorSearchResponse;
+import com.cinfin.bam.entity.DirectBillPlan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AssureService {
 
-  private static final String BASE_URL =
-      "http://10.224.192.45:8080/billing-accounts/v1/billing/accounts";
+    private static final Logger logger = LoggerFactory.getLogger(AssureService.class);
+    private static final String BASE_URL = "http://10.224.192.45:8080/billing-accounts/v1/billing/accounts";
+    private static final String ACCOUNT_TYPE = "DirectBill"; // Move to constant
+    private static final String PRESENTMENT_METHOD = "Paper"; // Move to constant
 
-  @Value("${assure.service.url}")
-  private String assureServiceUrl;
+    private static AccountCreationRequest getAccountCreationRequest(AccountBillDTO request, DirectBillPlan plan, String partyId, String addressSequence) {
+        AccountCreationRequest accountCreateRequest = new AccountCreationRequest();
+        accountCreateRequest.setAccountNumber(request.getAccountInfo().getCurrentAccountNbr());
+        accountCreateRequest.setType(ACCOUNT_TYPE);
+        accountCreateRequest.setBillingType(plan.getBilTypeCd());
+        accountCreateRequest.setAccountPlan(plan.getBilClassCd());
+        accountCreateRequest.setAccountDueDate(request.getPolicy().getEffectiveDt().toString());
+        accountCreateRequest.setBillThroughDate(request.getPolicy().getEffectiveDt().toString());
+        accountCreateRequest.setPresentmentMethod(PRESENTMENT_METHOD);
+        accountCreateRequest.setPayorId(partyId);
+        accountCreateRequest.setPayorAddressId(addressSequence);
+        return accountCreateRequest;
+    }
+    private final RestTemplate restTemplate;
 
-  @Value("${assure.service.user.id}")
-  private String userId;
+    private final ApplicationPropertiesConfig config;
 
-  @Value("${assure.service.request}")
-  private String serviceRequest;
-
-  private final RestTemplate restTemplate;
-
-
-  @Autowired
-  public AssureService(RestTemplate restTemplate) {
-    this.restTemplate = restTemplate;
-  }
-
-  public String checkAccountExists(String accountNumber) throws Exception {
-    try {
-      HttpHeaders headers = new HttpHeaders();
-      headers.set("X-CSC-User-Id", this.userId);
-      headers.set("X-Service-request", this.serviceRequest);
-      HttpEntity<String> entity = new HttpEntity<>(headers);
-      String url = this.assureServiceUrl + "/billing-accounts/v1/billing/accounts" + "?query="
-          + "&filters=accountNumber:" + accountNumber;
-      ResponseEntity<Account> response =
-          this.restTemplate.exchange(url, HttpMethod.GET, entity, Account.class);
-
-      if (response != null) {
-        return response.getBody().getAccountId();
-      }
-      return null;
-
-
-    } catch (Exception e) {
-      throw new Exception("Error checking account existence", e);
+    @Autowired
+    public AssureService(RestTemplate restTemplate, ApplicationPropertiesConfig config) {
+        this.restTemplate = restTemplate;
+        this.config = config;
     }
 
-  }
+    public Account callCheckAccountExistsService(String accountNumber) {
+        try {
+            HttpHeaders headers = BillingAccountManagementUtil.getHttpHeaders();
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-  public String createAccount(AccountCreationRequest request) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    HttpEntity<AccountCreationRequest> httpEntity = new HttpEntity<>(request, headers);
+            String url = this.config.getAssureBaseUrl() + "/billing-accounts/v1/billing/accounts?filters=accountNumber:" + accountNumber;
+            ResponseEntity<AccountExistCheckResponse> response = this.restTemplate.exchange(
+                    url, HttpMethod.GET, entity, AccountExistCheckResponse.class);
 
-    ResponseEntity<String> response =
-        this.restTemplate.postForEntity(BASE_URL, httpEntity, String.class);
-
-    if (response.getStatusCode().is2xxSuccessful()) {
-      String responseBody = response.getBody();
-      // Assuming responseBody contains JSON with an "accountId" field
-      // Implement JSON parsing to extract accountId
-      return responseBody.substring(responseBody.indexOf("accountId") + 11,
-          responseBody.indexOf(",", responseBody.indexOf("accountId")) - 1);
-    } else {
-      throw new RuntimeException("Failed to create account");
-    }
-  }
-
-  public PartySearchItem getPayor(AccountBillDTO request) throws Exception {
-    try {
-      // Construct the URL for searching payors
-      String queryParam = request.getPayorInfo().getPayorType().equals("CO")
-          ? request.getPayorInfo().getCompanyName()
-          : request.getPayorInfo().getLastName();
-
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.add("X-CSC-User-Id", "Jharve4");
-      headers.add("X-Service-request", "False");
-
-      HttpEntity<String> entity = new HttpEntity<>(headers);
-
-      String url = this.assureServiceUrl + "/parties/v1/parties" + "?query=" + queryParam
-          + "&filters=addressType:Billing";
-
-      ResponseEntity<PayorSearchResponse> payorSearchResponse =
-          this.restTemplate.exchange(url, HttpMethod.GET, entity, PayorSearchResponse.class);
-
-      // Iterate through the list of payors to find the exact match
-      for (PartySearchItem payor : payorSearchResponse.getBody().getEmbedded()
-          .getPartySearchList()) {
-        if (request.getPayorInfo().getPayorType().equals("CO")
-            && payor.getName().equals(request.getPayorInfo().getCompanyName())) {
-          return payor;
-        } else if (request.getPayorInfo().getPayorType().equals("IN"))
-
-        {
-          String fullName = request.getPayorInfo().getFirstName()
-              + request.getPayorInfo().getMiddleName() + request.getPayorInfo().getLastName();
-          if (fullName.equalsIgnoreCase(payor.getName())) {
-            return payor;
-          }
-
-
+            logger.info("Response: {}", response);
+            if (response.getStatusCode().is2xxSuccessful() && !response.getBody().getContent().isEmpty()) {
+                return response.getBody().getContent().get(0);
+            }
+            return null;
+        } catch (Exception e) {
+            logger.error("Error occurred while checking if account exists for {} due to {}", accountNumber, e.getMessage(), e);
+            return null;
         }
-      }
-
-      // If no exact match found, return null
-      return null;
-
-    } catch (HttpClientErrorException.NotFound e) {
-      // If payor not found, return null
-      return null;
-    } catch (HttpClientErrorException | HttpServerErrorException e) {
-      throw new Exception("Error retrieving payor information", e);
     }
-  }
+
+    public String callCreateAccountService(AccountBillDTO request, DirectBillPlan plan, String partyId, String addressSequence) {
+        try {
+            AccountCreationRequest accountCreateRequest = getAccountCreationRequest(request, plan, partyId, addressSequence);
+            logger.info("Request is {}", accountCreateRequest);
+
+            HttpHeaders headers = BillingAccountManagementUtil.getHttpHeaders();
+            HttpEntity<AccountCreationRequest> httpEntity = new HttpEntity<>(accountCreateRequest, headers);
+            ResponseEntity<AccountCreationResponse> response = this.restTemplate.postForEntity(
+                    BASE_URL, httpEntity, AccountCreationResponse.class);
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                logger.info("Account created with ID as {}", response.getBody().getAccountId());
+                return response.getBody().getAccountId();
+            }
+            return null;
+        } catch (Exception e) {
+            logger.error("Error in createAccount due to {}", e.getMessage(), e);
+            return null;
+        }
+    }
+}
+
 }

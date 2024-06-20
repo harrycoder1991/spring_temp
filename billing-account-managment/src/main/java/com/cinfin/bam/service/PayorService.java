@@ -1,58 +1,127 @@
 package com.cinfin.bam.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.cinfin.bam.config.ApplicationPropertiesConfig;
 import com.cinfin.bam.dto.requests.AccountBillDTO;
 import com.cinfin.bam.dto.requests.AdditionalNameRequest;
 import com.cinfin.bam.dto.requests.AddressRequest;
 import com.cinfin.bam.dto.requests.PayorRequest;
+import com.cinfin.bam.utils.BillingAccountManagementUtil;
 
 @Service
 public class PayorService {
 
-  @Value("${assure.api.createpayor.url}")
-  private String assureCreatePayorServiceUrl;
+  private static final Logger logger = LoggerFactory.getLogger(PayorService.class);
+
+  private final ApplicationPropertiesConfig config;
+  private final RestTemplate restTemplate;
 
   @Autowired
-  private RestTemplate restTemplate;
+  public PayorService(RestTemplate restTemplate, ApplicationPropertiesConfig config) {
+    this.restTemplate = restTemplate;
+    this.config = config;
+  }
 
+  public void callCreateAdditionalNameService(String partyId,
+      AdditionalNameRequest additionalNameRequest) {
+    try {
+      String url = this.config.getAssureBaseUrl() + this.config.getAssureCreatePayorEndpoint() + "/"
+          + partyId + "/additionalNames";
+      HttpHeaders headers = BillingAccountManagementUtil.getHttpHeaders();
+      HttpEntity<AdditionalNameRequest> request = new HttpEntity<>(additionalNameRequest, headers);
+      ResponseEntity<PayorAdditionalNameCreateResponse> response =
+          this.restTemplate.postForEntity(url, request, PayorAdditionalNameCreateResponse.class);
+      logger.info("PayorAdditionalNameCreateResponse received with sequence as "
+          + response.getBody().getSequence());
 
-
-  public void createAdditionalName(String partyId, AdditionalNameRequest additionalNameRequest) {
-    String url = this.assureCreatePayorServiceUrl + "/" + partyId + "/additionalNames";
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    HttpEntity<AdditionalNameRequest> request = new HttpEntity<>(additionalNameRequest, headers);
-
-    ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class);
-    // sequence will be there in response
-    if (!response.getStatusCode().is2xxSuccessful()) {
-      throw new RuntimeException("Failed to create additional name");
+      if (!response.getStatusCode().is2xxSuccessful()) {
+        throw new RuntimeException("Failed to create additional name");
+      }
+    } catch (Exception e) {
+      logger.error("Error occurred in callCreateAdditionalNameService due to " + e.getMessage(), e);
     }
   }
 
-  public void createAddress(String partyId, AddressRequest addressRequest) {
-    String url = this.assureCreatePayorServiceUrl + "/" + partyId + "/addresses";
+  public String callCreateAddressService(AccountBillDTO inputRequest, String partyId) {
+    try {
+      AddressRequest addressRequest = createNewPayorAddressRequest(inputRequest);
+      String url = this.config.getAssureBaseUrl() + this.config.getAssureCreatePayorEndpoint() + "/"
+          + partyId + "/addresses";
+      HttpHeaders headers = BillingAccountManagementUtil.getHttpHeaders();
+      HttpEntity<AddressRequest> request = new HttpEntity<>(addressRequest, headers);
+      ResponseEntity<CreateAddressResponse> response =
+          this.restTemplate.postForEntity(url, request, CreateAddressResponse.class);
+      logger.info("CreateAddressResponse received with Address sequence as "
+          + response.getBody().getAddressSequence());
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    HttpEntity<AddressRequest> request = new HttpEntity<>(addressRequest, headers);
-
-    ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class);
-
-    if (!response.getStatusCode().is2xxSuccessful()) {
-      throw new RuntimeException("Failed to create address");
+      if (!response.getStatusCode().is2xxSuccessful()) {
+        throw new RuntimeException("Failed to create address");
+      }
+      return response.getBody().getAddressSequence();
+    } catch (Exception e) {
+      logger.error("Error occurred in callCreateAddressService due to " + e.getMessage(), e);
+      return null;
     }
   }
 
-  public AddressRequest createNewPayorAddressRequest(AccountBillDTO request) {
+  public String callCreatePayorService(AccountBillDTO inputRequest, String compressedGuid) {
+    try {
+      logger.info("Inside callCreatePayorService");
+      PayorRequest payorRequest = createPayorRequest(inputRequest, compressedGuid);
+      HttpHeaders headers = BillingAccountManagementUtil.getHttpHeaders();
+      HttpEntity<PayorRequest> request = new HttpEntity<>(payorRequest, headers);
+      String url = this.config.getAssureBaseUrl() + this.config.getAssureCreatePayorEndpoint();
+      ResponseEntity<PayorCreationResponse> response =
+          this.restTemplate.postForEntity(url, request, PayorCreationResponse.class);
+
+      if (response.getStatusCode().is2xxSuccessful()) {
+        String partyId = response.getBody().getPartyId();
+        logger.info("Party Id is " + partyId);
+
+        if (isDummyEmail(payorRequest.getEmail().getPrimary())) {
+          callPayorInfoUpdateService(partyId);
+        }
+
+        return partyId;
+      } else {
+        logger.error("Error occurred in callCreatePayorService due to " + response.getStatusCode());
+        throw new RuntimeException("Failed to create payor");
+      }
+    } catch (Exception e) {
+      logger.error("Error occurred in callCreatePayorService due to " + e.getMessage(), e);
+      return null;
+    }
+  }
+
+  public void callPayorInfoUpdateService(String payorId) {
+    try {
+      UpdatePayorRequestDTO request = new UpdatePayorRequestDTO();
+      logger.info("**Request is " + request.toString());
+      HttpHeaders headers = BillingAccountManagementUtil.getHttpHeaders();
+      HttpEntity<UpdatePayorRequestDTO> httpEntity = new HttpEntity<>(request, headers);
+      String url = "http://10.224.192.45:8080/parties/v1/parties/" + payorId;
+      ResponseEntity<String> response =
+          this.restTemplate.exchange(url, HttpMethod.PATCH, httpEntity, String.class);
+
+      if (response.getStatusCode().is2xxSuccessful()) {
+        logger.info("Payor updated by removing dummy values for PayorId: " + payorId);
+      } else {
+        logger.info("Failed to update Payor by removing dummy values for PayorId: " + payorId);
+      }
+    } catch (Exception e) {
+      logger.error("Error in callPayorInfoUpdateService due to " + e.getMessage(), e);
+    }
+  }
+
+  private AddressRequest createNewPayorAddressRequest(AccountBillDTO request) {
     AddressRequest addressRequest = new AddressRequest();
     addressRequest.setAddressType("Billing");
     if (request.getPayorInfo().getPayorAddress().getAddr2() != null) {
@@ -61,10 +130,6 @@ public class PayorService {
     if (request.getPayorInfo().getPayorAddress().getAddr1() != null) {
       addressRequest.setAddressLine1(request.getPayorInfo().getPayorAddress().getAddr1());
     }
-    /*
-     * if (request.get.getAttentionLine() != null) {
-     * addressRequest.setAttentionLine(input.getAttentionLine()); }
-     */
     addressRequest.setCity(request.getPayorInfo().getPayorAddress().getCity());
     addressRequest.setPostal(request.getPayorInfo().getPayorAddress().getZip()
         + (request.getPayorInfo().getPayorAddress().getZipExtension() != null
@@ -75,34 +140,14 @@ public class PayorService {
     return addressRequest;
   }
 
-  public String createPayor(PayorRequest payorRequest) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    HttpEntity<PayorRequest> request = new HttpEntity<>(payorRequest, headers);
-
-    ResponseEntity<String> response =
-        this.restTemplate.postForEntity(this.assureCreatePayorServiceUrl, request, String.class);
-
-    if (response.getStatusCode().is2xxSuccessful()) {
-      // Extract partyId from response
-      String responseBody = response.getBody();
-      // Assuming responseBody is a JSON string, parse to extract partyId
-      // This could be improved with proper JSON parsing
-      return responseBody.substring(responseBody.indexOf("partyId") + 10,
-          responseBody.indexOf(",", responseBody.indexOf("partyId")) - 1);
-    } else {
-      throw new RuntimeException("Failed to create payor");
-    }
-  }
-
-  public PayorRequest createPayorRequest(AccountBillDTO request, String compressedGuid) {
+  private PayorRequest createPayorRequest(AccountBillDTO request, String compressedGuid) {
     PayorRequest payorRequest = new PayorRequest();
+    PayorRequest.Details details = new PayorRequest.Details();
+    PayorRequest.Details.Name name = new PayorRequest.Details.Name();
 
+    details.setExternalId(compressedGuid);
     if ("IN".equals(request.getPayorInfo().getPayorType())) {
       payorRequest.setPerson(true);
-
-      PayorRequest.Details details = new PayorRequest.Details();
-      PayorRequest.Details.Name name = new PayorRequest.Details.Name();
       name.setGiven(request.getPayorInfo().getFirstName());
       if (request.getPayorInfo().getMiddleName() != null) {
         name.setMiddle(request.getPayorInfo().getMiddleName());
@@ -115,16 +160,13 @@ public class PayorService {
         name.setSuffix(request.getPayorInfo().getNameSuffix());
       }
       details.setName(name);
-      payorRequest.setDetails(details);
     } else if ("CO".equals(request.getPayorInfo().getPayorType())) {
       payorRequest.setPerson(false);
-
-      PayorRequest.Details details = new PayorRequest.Details();
-      PayorRequest.Details.Name name = new PayorRequest.Details.Name();
       name.setGiven(request.getPayorInfo().getCompanyName());
       details.setName(name);
-      payorRequest.setDetails(details);
     }
+
+    payorRequest.setDetails(details);
 
     PayorRequest.Email email = new PayorRequest.Email();
     email.setPrimary(request.getPayorInfo().getPayorEmail());
@@ -136,10 +178,10 @@ public class PayorService {
     phone.setPrimary(primary);
     payorRequest.setPhone(phone);
 
-    payorRequest.setExternalId(compressedGuid);
-
     return payorRequest;
   }
+
+  private boolean isDummyEmail(String email) {
+    return "no-reply@cinfin.com".equalsIgnoreCase(email);
+  }
 }
-
-
