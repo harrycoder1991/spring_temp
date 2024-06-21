@@ -42,6 +42,39 @@ class PayorServiceTest {
   }
 
   @Test
+  void testCallCreateAdditionalNameService_Success() {
+    // Prepare test data
+    String partyId = "partyId";
+    AdditionalNameRequest additionalNameRequest = new AdditionalNameRequest();
+    additionalNameRequest.setType("Doing Business As");
+    additionalNameRequest.setFullName("Test Name");
+
+    // Prepare mock response
+    PayorAdditionalNameCreateResponse payorResponse = new PayorAdditionalNameCreateResponse();
+    payorResponse.setSequence("sequence");
+    ResponseEntity<PayorAdditionalNameCreateResponse> responseEntity =
+        new ResponseEntity<>(payorResponse, HttpStatus.OK);
+
+    // Mock RestTemplate call
+    when(this.restTemplate.postForEntity(anyString(), any(HttpEntity.class),
+        eq(PayorAdditionalNameCreateResponse.class))).thenReturn(responseEntity);
+
+    // Mock headers
+    HttpHeaders mockHeaders = new HttpHeaders();
+    when(billingAccountManagementUtil.getHttpHeaders()).thenReturn(mockHeaders);
+
+    // Execute the method to be tested
+    this.payorService.callCreateAdditionalNameService(partyId, additionalNameRequest);
+
+    // Verify RestTemplate interaction
+    verify(this.restTemplate, times(1)).postForEntity(anyString(), any(HttpEntity.class),
+        eq(PayorAdditionalNameCreateResponse.class));
+  }
+
+}
+
+
+  @Test
   void testCallCreateAdditionalNameService_Failure() {
     String partyId = "123";
     AdditionalNameRequest additionalNameRequest = new AdditionalNameRequest();
