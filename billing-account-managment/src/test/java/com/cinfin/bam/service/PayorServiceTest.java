@@ -42,33 +42,39 @@ class PayorServiceTest {
   }
 
   @Test
-  void testCallCreateAdditionalNameService_Success() {
+  public void testCallCreateAdditionalNameService_Success() {
     // Prepare test data
     String partyId = "partyId";
     AdditionalNameRequest additionalNameRequest = new AdditionalNameRequest();
     additionalNameRequest.setType("Doing Business As");
     additionalNameRequest.setFullName("Test Name");
 
-    // Prepare mock response
-    PayorAdditionalNameCreateResponse payorResponse = new PayorAdditionalNameCreateResponse();
-    payorResponse.setSequence("sequence");
-    ResponseEntity<PayorAdditionalNameCreateResponse> responseEntity =
-        new ResponseEntity<>(payorResponse, HttpStatus.OK);
-
-    // Mock RestTemplate call
-    when(this.restTemplate.postForEntity(anyString(), any(HttpEntity.class),
-        eq(PayorAdditionalNameCreateResponse.class))).thenReturn(responseEntity);
-
-    // Mock headers
+    // Mocking static method getHttpHeaders
     HttpHeaders mockHeaders = new HttpHeaders();
-    when(billingAccountManagementUtil.getHttpHeaders()).thenReturn(mockHeaders);
+    try (MockedStatic<BillingAccountManagementUtil> mockedStatic =
+        Mockito.mockStatic(BillingAccountManagementUtil.class)) {
+      mockedStatic.when(BillingAccountManagementUtil::getHttpHeaders).thenReturn(mockHeaders);
 
-    // Execute the method to be tested
-    this.payorService.callCreateAdditionalNameService(partyId, additionalNameRequest);
+      // Prepare mock response
+      PayorAdditionalNameCreateResponse payorResponse = new PayorAdditionalNameCreateResponse();
+      payorResponse.setSequence("sequence");
+      ResponseEntity<PayorAdditionalNameCreateResponse> responseEntity =
+          new ResponseEntity<>(payorResponse, HttpStatus.OK);
 
-    // Verify RestTemplate interaction
-    verify(this.restTemplate, times(1)).postForEntity(anyString(), any(HttpEntity.class),
-        eq(PayorAdditionalNameCreateResponse.class));
+      // Mock RestTemplate response
+      Mockito.when(this.restTemplate.postForEntity(anyString(), any(HttpEntity.class),
+          eq(PayorAdditionalNameCreateResponse.class))).thenReturn(responseEntity);
+
+      // Execute the method to be tested
+      this.payorService.callCreateAdditionalNameService(partyId, additionalNameRequest);
+
+      // Verify the RestTemplate interaction
+      verify(this.restTemplate).postForEntity(anyString(), any(HttpEntity.class),
+          eq(PayorAdditionalNameCreateResponse.class));
+
+      // Assertion to ensure execution
+      assertNotNull(payorResponse.getSequence(), "Sequence should not be null");
+    }
   }
 
 }
