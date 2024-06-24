@@ -55,21 +55,21 @@ class PayorServiceTest {
 
 
   @Test
-  void testCallCreatePayorService_Failure() {
+  void testCallCreatePayorService_Failure1() {
     // Prepare test data
-    AccountBillDTO accountBillDTO = new AccountBillDTO(); // initialize with necessary data
+    AccountBillDTO accountBillDTO = new AccountBillDTO(); // Initialize with necessary data
     String compressedGuid = "compressedGuid";
 
     // Prepare mock response
     ResponseEntity<PayorCreationResponse> responseEntity = mock(ResponseEntity.class);
     when(responseEntity.getStatusCode()).thenReturn(HttpStatus.BAD_REQUEST);
 
-    // Mock configuration
-    when(this.config.getAssureServiceHeaderUserId()).thenReturn("User1");
-    when(this.config.getAssureServiceHeaderRequest()).thenReturn("False");
-
     // Mock static method getHttpHeaders
     HttpHeaders mockHeaders = new HttpHeaders();
+    mockHeaders.set("X-CSC-User-Id", "User1");
+    mockHeaders.set("X-Service-request", "False");
+    mockHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
     try (MockedStatic<BillingAccountManagementUtil> mockedStatic =
         mockStatic(BillingAccountManagementUtil.class)) {
       mockedStatic.when(BillingAccountManagementUtil::getHttpHeaders).thenReturn(mockHeaders);
