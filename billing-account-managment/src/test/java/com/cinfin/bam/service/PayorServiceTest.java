@@ -49,7 +49,8 @@ class PayorServiceTest {
     Field configField = BillingAccountManagementUtil.class.getDeclaredField("config");
     configField.setAccessible(true);
     configField.set(null, this.config);
-
+    when(this.config.getAssureServiceHeaderUserId()).thenReturn("User1");
+    when(this.config.getAssureServiceHeaderRequest()).thenReturn("False");
   }
 
 
