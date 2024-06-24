@@ -6,13 +6,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import java.lang.reflect.Field;
+import java.net.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -22,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import com.cinfin.bam.config.ApplicationPropertiesConfig;
 import com.cinfin.bam.dto.requests.AccountBillDTO;
 import com.cinfin.bam.dto.requests.AdditionalNameRequest;
+import com.cinfin.bam.utils.BillingAccountManagementUtil;
 
 class PayorServiceTest {
 
@@ -39,10 +44,56 @@ class PayorServiceTest {
     MockitoAnnotations.openMocks(this);
     when(this.config.getAssureBaseUrl()).thenReturn("http://fake-url.com");
     when(this.config.getAssureCreatePayorEndpoint()).thenReturn("/payor");
+
+    // Set static field using reflection
+    Field configField = BillingAccountManagementUtil.class.getDeclaredField("config");
+    configField.setAccessible(true);
+    configField.set(null, this.config);
+
   }
 
+
   @Test
-  public void testCallCreateAdditionalNameService_Success() {
+  void testCallCreatePayorService_Failure() {
+    // Prepare test data
+    AccountBillDTO accountBillDTO = new AccountBillDTO(); // initialize with necessary data
+    String compressedGuid = "compressedGuid";
+
+    // Prepare mock response
+    ResponseEntity<PayorCreationResponse> responseEntity = mock(ResponseEntity.class);
+    when(responseEntity.getStatusCode()).thenReturn(HttpStatus.BAD_REQUEST);
+
+    // Mock configuration
+    when(this.config.getAssureServiceHeaderUserId()).thenReturn("User1");
+    when(this.config.getAssureServiceHeaderRequest()).thenReturn("False");
+
+    // Mock static method getHttpHeaders
+    HttpHeaders mockHeaders = new HttpHeaders();
+    try (MockedStatic<BillingAccountManagementUtil> mockedStatic =
+        mockStatic(BillingAccountManagementUtil.class)) {
+      mockedStatic.when(BillingAccountManagementUtil::getHttpHeaders).thenReturn(mockHeaders);
+
+      // Mock RestTemplate response
+      when(this.restTemplate.postForEntity(anyString(), any(HttpEntity.class),
+          eq(PayorCreationResponse.class))).thenReturn(responseEntity);
+
+      // Execute the method to be tested
+      String partyId = this.payorService.callCreatePayorService(accountBillDTO, compressedGuid);
+
+      // Assertions
+      assertNull(partyId);
+
+      // Verify RestTemplate interaction
+      verify(this.restTemplate).postForEntity(anyString(), any(HttpEntity.class),
+          eq(PayorCreationResponse.class));
+    }
+  }
+
+}
+
+
+  @Test
+  public void testCallCreateAdditionalNameService_Success1() {
     // Prepare test data
     String partyId = "partyId";
     AdditionalNameRequest additionalNameRequest = new AdditionalNameRequest();
